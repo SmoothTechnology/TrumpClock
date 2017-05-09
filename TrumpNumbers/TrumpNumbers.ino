@@ -1,6 +1,8 @@
 #include <DMXSerial.h>
+
 #define MAX_VALUE 255
 #define MIN_VALUE 0
+#define USE_GPS
 
 struct Segment
 {
@@ -19,6 +21,109 @@ struct SevenSeg
 	Segment segG;
 };
 
+// Current Date and Time
+int curHour = 0;
+int curMinute = 0;
+int curSecond = 0;
+int curDay = 0;
+int curMonth = 0;
+int curYear = 0;
+
+// Define Destination Date
+int destinationHour = 0;
+int destinationDay = 0;
+int destinationMonth = 0;
+int destinationYear = 0;
+
+
+/// GPS TIME GETTING
+#include <Adafruit_GPS.h>
+#include <SoftwareSerial.h>
+
+SoftwareSerial mySerial(3, 2);
+
+Adafruit_GPS GPS(&mySerial);
+
+// Set GPSECHO to 'false' to turn off echoing the GPS data to the Serial console
+// Set to 'true' if you want to debug and listen to the raw GPS sentences. 
+#define GPSECHO  false
+
+// this keeps track of whether we're using the interrupt
+// off by default!
+boolean usingInterrupt = false;
+void useInterrupt(boolean); // Func prototype keeps Arduino 0023 happy
+
+
+void SetupGPS()
+{
+
+  // 9600 NMEA is the default baud rate for Adafruit MTK GPS's- some use 4800
+  GPS.begin(9600);
+  
+  // uncomment this line to turn on RMC (recommended minimum) and GGA (fix data) including altitude
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  
+  // Set the update rate
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz update rate
+
+  // Request updates on antenna status, comment out to keep quiet
+  GPS.sendCommand(PGCMD_ANTENNA);
+
+  useInterrupt(true);
+
+  delay(1000);
+  // Ask for firmware version
+  mySerial.println(PMTK_Q_RELEASE);
+}
+
+SIGNAL(TIMER0_COMPA_vect) {
+  char c = GPS.read();
+#ifdef UDR0
+  if (GPSECHO)
+    if (c) UDR0 = c;  
+#endif
+}
+
+void useInterrupt(boolean v) {
+  if (v) 
+  {
+    OCR0A = 0xAF;
+    TIMSK0 |= _BV(OCIE0A);
+    usingInterrupt = true;
+  } 
+  else 
+  {
+    TIMSK0 &= ~_BV(OCIE0A);
+    usingInterrupt = false;
+  }
+}
+
+uint32_t timer = millis();
+void ReadGPS()
+{
+  if (GPS.newNMEAreceived()) 
+  {
+	  if (!GPS.parse(GPS.lastNMEA())) 
+	      return;  
+  }
+
+  if (timer > millis())  timer = millis();
+
+  if (millis() - timer > 2000) 
+  { 
+    timer = millis();
+    
+    curHour	 	= GPS.hour;
+    curMinute 	= GPS.minute;
+    curSecond 	= GPS.seconds;
+    curDay 		= GPS.day;
+    curMonth 	= GPS.month;
+    curYear 	= GPS.year;
+  }
+}
+
+
+// BEGIN TRUMP NUMBERS
 void LightZero(SevenSeg &mySeg)
 {
 	mySeg.segA.value = MAX_VALUE;
@@ -302,7 +407,26 @@ void LightSevenSegDisplays()
 	LightSevenSegDigit(digit6);
 }
 
+void CalculateSevenSegmentNumbers()
+{
+
+}
+
+void LightTestNumbers()
+{
+  LightNumber(1, digit1);
+  LightNumber(2, digit2);
+  LightNumber(3, digit3);
+  LightNumber(4, digit4);
+  LightNumber(5, digit5);
+  LightNumber(6, digit6);
+}
+
 void setup() {
+
+#ifdef USE_GPS
+	SetupGPS();
+#endif
 
   SetupSevenSegDigits();
   DMXSerial.init(DMXController);
@@ -311,14 +435,14 @@ void setup() {
 
 
 void loop() {
-  
-  LightNumber(1, digit1);
-  LightNumber(2, digit2);
-  LightNumber(3, digit3);
-  LightNumber(4, digit4);
-  LightNumber(5, digit5);
-  LightNumber(6, digit6);
 
+#ifdef USE_GPS
+	ReadGPS();
+	CalculateSevenSegmentNumbers();
+#else
+ 	LightTestNumbers();
+#endif
+  
   // Pretty much will be used for brightness
   LightSevenSegDisplays();
 
