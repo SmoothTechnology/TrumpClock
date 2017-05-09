@@ -2,7 +2,7 @@
 
 #define MAX_VALUE 255
 #define MIN_VALUE 0
-#define USE_GPS
+//#define USE_GPS
 
 struct Segment
 {
@@ -422,6 +422,24 @@ void LightTestNumbers()
   LightNumber(6, digit6);
 }
 
+unsigned long number = 123456;
+unsigned long lastMillis = 0;
+void CountTest()
+{
+	if(millis() - lastMillis > 1000)
+	{
+		lastMillis = millis();
+		number++;
+	}
+
+	LightNumber((number/100000)%10, digit1);
+	LightNumber((number/10000)%10, digit2);
+	LightNumber((number/1000)%10, digit3);
+	LightNumber((number/100)%10, digit4);
+	LightNumber((number/10)%10, digit5);
+	LightNumber((number)%10, digit6);
+}
+
 void setup() {
 
 #ifdef USE_GPS
@@ -440,7 +458,8 @@ void loop() {
 	ReadGPS();
 	CalculateSevenSegmentNumbers();
 #else
- 	LightTestNumbers();
+ 	//LightTestNumbers();
+ 	CountTest();
 #endif
   
   // Pretty much will be used for brightness
