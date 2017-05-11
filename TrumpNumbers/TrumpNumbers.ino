@@ -2,7 +2,7 @@
 
 #define MAX_VALUE 255
 #define MIN_VALUE 0
-//#define USE_GPS
+#define USE_GPS
 
 struct Segment
 {
@@ -181,11 +181,19 @@ void ReadGPS()
     timer = millis();
     
     curHour	 	= GPS.hour;
+
+    // Adjust to EST FROM GMT
+    curHour = curHour - 5;
+    if(curHour < 0)
+    {
+    	curHour = 24+curHour;
+    }
+
     curMinute 	= GPS.minute;
     curSecond 	= GPS.seconds;
     curDay 		= GPS.day;
     curMonth 	= GPS.month;
-    curYear 	= GPS.year;
+    curYear 	= GPS.year + 2000; // Adjust for GPS only returning last 2 digits
   }
 }
 
