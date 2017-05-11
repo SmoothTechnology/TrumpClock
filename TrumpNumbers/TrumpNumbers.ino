@@ -310,70 +310,77 @@ SevenSeg digit4;
 SevenSeg digit5;
 SevenSeg digit6;
 
+#define OFFSETDIGIT1 0
+#define OFFSETDIGIT2 10
+#define OFFSETDIGIT3 20
+#define OFFSETDIGIT4 30
+#define OFFSETDIGIT5 40
+#define OFFSETDIGIT6 50
+
 void Digit1Setup()
 {
-	digit1.segA.dmxChannel = 0;
-	digit1.segB.dmxChannel = 1;
-	digit1.segC.dmxChannel = 2;
-	digit1.segD.dmxChannel = 3;
-	digit1.segE.dmxChannel = 4;
-	digit1.segF.dmxChannel = 5;
-	digit1.segG.dmxChannel = 6;
+	digit1.segA.dmxChannel = OFFSETDIGIT1 + 1;
+	digit1.segB.dmxChannel = OFFSETDIGIT1 + 2;
+	digit1.segC.dmxChannel = OFFSETDIGIT1 + 7;
+	digit1.segD.dmxChannel = OFFSETDIGIT1 + 6;
+	digit1.segE.dmxChannel = OFFSETDIGIT1 + 5;
+	digit1.segF.dmxChannel = OFFSETDIGIT1 + 4;
+	digit1.segG.dmxChannel = OFFSETDIGIT1 + 3;
 }
 
 void Digit2Setup()
 {
-	digit2.segA.dmxChannel = 7;
-	digit2.segB.dmxChannel = 8;
-	digit2.segC.dmxChannel = 9;
-	digit2.segD.dmxChannel = 10;
-	digit2.segE.dmxChannel = 11;
-	digit2.segF.dmxChannel = 12;
-	digit2.segG.dmxChannel = 13;
+	digit2.segA.dmxChannel = OFFSETDIGIT2 + 1;
+	digit2.segB.dmxChannel = OFFSETDIGIT2 + 2;
+	digit2.segC.dmxChannel = OFFSETDIGIT2 + 7;
+	digit2.segD.dmxChannel = OFFSETDIGIT2 + 6;
+	digit2.segE.dmxChannel = OFFSETDIGIT2 + 5;
+	digit2.segF.dmxChannel = OFFSETDIGIT2 + 4;
+	digit2.segG.dmxChannel = OFFSETDIGIT2 + 3;
 }
 
 void Digit3Setup()
 {
-	digit3.segA.dmxChannel = 14;
-	digit3.segB.dmxChannel = 15;
-	digit3.segC.dmxChannel = 16;
-	digit3.segD.dmxChannel = 17;
-	digit3.segE.dmxChannel = 18;
-	digit3.segF.dmxChannel = 19;
-	digit3.segG.dmxChannel = 20;
+	digit3.segA.dmxChannel = OFFSETDIGIT3 + 1;
+	digit3.segB.dmxChannel = OFFSETDIGIT3 + 2;
+	digit3.segC.dmxChannel = OFFSETDIGIT3 + 7;
+	digit3.segD.dmxChannel = OFFSETDIGIT3 + 6;
+	digit3.segE.dmxChannel = OFFSETDIGIT3 + 5;
+	digit3.segF.dmxChannel = OFFSETDIGIT3 + 4;
+	digit3.segG.dmxChannel = OFFSETDIGIT3 + 3;
 }
 
 void Digit4Setup()
 {
-	digit4.segA.dmxChannel = 21;
-	digit4.segB.dmxChannel = 22;
-	digit4.segC.dmxChannel = 23;
-	digit4.segD.dmxChannel = 24;
-	digit4.segE.dmxChannel = 25;
-	digit4.segF.dmxChannel = 26;
-	digit4.segG.dmxChannel = 27;
+	digit4.segA.dmxChannel = OFFSETDIGIT4 + 1;
+	digit4.segB.dmxChannel = OFFSETDIGIT4 + 2;
+	digit4.segC.dmxChannel = OFFSETDIGIT4 + 7;
+	digit4.segD.dmxChannel = OFFSETDIGIT4 + 6;
+	digit4.segE.dmxChannel = OFFSETDIGIT4 + 5;
+	digit4.segF.dmxChannel = OFFSETDIGIT4 + 4;
+	digit4.segG.dmxChannel = OFFSETDIGIT4 + 3;
 }
 
 void Digit5Setup()
 {
-	digit5.segA.dmxChannel = 28;
-	digit5.segB.dmxChannel = 29;
-	digit5.segC.dmxChannel = 30;
-	digit5.segD.dmxChannel = 31;
-	digit5.segE.dmxChannel = 32;
-	digit5.segF.dmxChannel = 33;
-	digit5.segG.dmxChannel = 34;
+	digit5.segA.dmxChannel = OFFSETDIGIT5 + 1;
+	digit5.segB.dmxChannel = OFFSETDIGIT5 + 2;
+	digit5.segC.dmxChannel = OFFSETDIGIT5 + 7;
+	digit5.segD.dmxChannel = OFFSETDIGIT5 + 6;
+	digit5.segE.dmxChannel = OFFSETDIGIT5 + 5;
+	digit5.segF.dmxChannel = OFFSETDIGIT5 + 4;
+	digit5.segG.dmxChannel = OFFSETDIGIT5 + 3;
 }
 
 void Digit6Setup()
 {
-	digit6.segA.dmxChannel = 35;
-	digit6.segB.dmxChannel = 36;
-	digit6.segC.dmxChannel = 37;
-	digit6.segD.dmxChannel = 38;
-	digit6.segE.dmxChannel = 39;
-	digit6.segF.dmxChannel = 40;
-	digit6.segG.dmxChannel = 41;
+	digit6.segA.dmxChannel = OFFSETDIGIT6 + 1;
+	digit6.segB.dmxChannel = OFFSETDIGIT6 + 2;
+	digit6.segC.dmxChannel = OFFSETDIGIT6 + 7;
+	digit6.segD.dmxChannel = OFFSETDIGIT6 + 6;
+	digit6.segE.dmxChannel = OFFSETDIGIT6 + 5;
+	digit6.segF.dmxChannel = OFFSETDIGIT6 + 4;
+	digit6.segG.dmxChannel = OFFSETDIGIT6 + 3;
 }
 
 void SetupSevenSegDigits()
