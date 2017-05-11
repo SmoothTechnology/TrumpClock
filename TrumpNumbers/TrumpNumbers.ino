@@ -1,7 +1,7 @@
 #include <DMXSerial.h>
 
-#define MAX_VALUE 255
-#define MIN_VALUE 0
+int MAX_VALUE = 255;
+int MIN_VALUE = 0;
 #define USE_GPS
 
 struct Segment
@@ -107,7 +107,7 @@ void GetTimeDifference()
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial mySerial(3, 2);
+SoftwareSerial mySerial(8, 7);
 
 Adafruit_GPS GPS(&mySerial);
 
@@ -568,6 +568,12 @@ void setup() {
 
 } // setup
 
+void ReadPotentiometer()
+{
+	int potValue = analogRead(A0);
+	potValue = 1023-potValue;
+	MAX_VALUE = potValue/4;
+}
 
 void loop() {
 
@@ -581,6 +587,7 @@ void loop() {
  	FakeCount();
 #endif
   
+  ReadPotentiometer();
   // Pretty much will be used for brightness
   LightSevenSegDisplays();
 
