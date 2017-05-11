@@ -319,67 +319,67 @@ SevenSeg digit6;
 
 void Digit1Setup()
 {
-	digit1.segA.dmxChannel = OFFSETDIGIT1 + 1;
-	digit1.segB.dmxChannel = OFFSETDIGIT1 + 2;
-	digit1.segC.dmxChannel = OFFSETDIGIT1 + 7;
-	digit1.segD.dmxChannel = OFFSETDIGIT1 + 6;
-	digit1.segE.dmxChannel = OFFSETDIGIT1 + 5;
-	digit1.segF.dmxChannel = OFFSETDIGIT1 + 4;
+	digit1.segA.dmxChannel = OFFSETDIGIT1 + 5;
+	digit1.segB.dmxChannel = OFFSETDIGIT1 + 4;
+	digit1.segC.dmxChannel = OFFSETDIGIT1 + 6;
+	digit1.segD.dmxChannel = OFFSETDIGIT1 + 7;
+	digit1.segE.dmxChannel = OFFSETDIGIT1 + 1;
+	digit1.segF.dmxChannel = OFFSETDIGIT1 + 2;
 	digit1.segG.dmxChannel = OFFSETDIGIT1 + 3;
 }
 
 void Digit2Setup()
 {
-	digit2.segA.dmxChannel = OFFSETDIGIT2 + 1;
-	digit2.segB.dmxChannel = OFFSETDIGIT2 + 2;
-	digit2.segC.dmxChannel = OFFSETDIGIT2 + 7;
-	digit2.segD.dmxChannel = OFFSETDIGIT2 + 6;
-	digit2.segE.dmxChannel = OFFSETDIGIT2 + 5;
-	digit2.segF.dmxChannel = OFFSETDIGIT2 + 4;
+	digit2.segA.dmxChannel = OFFSETDIGIT2 + 5;
+	digit2.segB.dmxChannel = OFFSETDIGIT2 + 4;
+	digit2.segC.dmxChannel = OFFSETDIGIT2 + 6;
+	digit2.segD.dmxChannel = OFFSETDIGIT2 + 7;
+	digit2.segE.dmxChannel = OFFSETDIGIT2 + 1;
+	digit2.segF.dmxChannel = OFFSETDIGIT2 + 2;
 	digit2.segG.dmxChannel = OFFSETDIGIT2 + 3;
 }
 
 void Digit3Setup()
 {
-	digit3.segA.dmxChannel = OFFSETDIGIT3 + 1;
-	digit3.segB.dmxChannel = OFFSETDIGIT3 + 2;
-	digit3.segC.dmxChannel = OFFSETDIGIT3 + 7;
-	digit3.segD.dmxChannel = OFFSETDIGIT3 + 6;
-	digit3.segE.dmxChannel = OFFSETDIGIT3 + 5;
-	digit3.segF.dmxChannel = OFFSETDIGIT3 + 4;
+	digit3.segA.dmxChannel = OFFSETDIGIT3 + 5;
+	digit3.segB.dmxChannel = OFFSETDIGIT3 + 4;
+	digit3.segC.dmxChannel = OFFSETDIGIT3 + 6;
+	digit3.segD.dmxChannel = OFFSETDIGIT3 + 7;
+	digit3.segE.dmxChannel = OFFSETDIGIT3 + 1;
+	digit3.segF.dmxChannel = OFFSETDIGIT3 + 2;
 	digit3.segG.dmxChannel = OFFSETDIGIT3 + 3;
 }
 
 void Digit4Setup()
 {
-	digit4.segA.dmxChannel = OFFSETDIGIT4 + 1;
-	digit4.segB.dmxChannel = OFFSETDIGIT4 + 2;
-	digit4.segC.dmxChannel = OFFSETDIGIT4 + 7;
-	digit4.segD.dmxChannel = OFFSETDIGIT4 + 6;
-	digit4.segE.dmxChannel = OFFSETDIGIT4 + 5;
-	digit4.segF.dmxChannel = OFFSETDIGIT4 + 4;
+	digit4.segA.dmxChannel = OFFSETDIGIT4 + 5;
+	digit4.segB.dmxChannel = OFFSETDIGIT4 + 4;
+	digit4.segC.dmxChannel = OFFSETDIGIT4 + 6;
+	digit4.segD.dmxChannel = OFFSETDIGIT4 + 7;
+	digit4.segE.dmxChannel = OFFSETDIGIT4 + 1;
+	digit4.segF.dmxChannel = OFFSETDIGIT4 + 2;
 	digit4.segG.dmxChannel = OFFSETDIGIT4 + 3;
 }
 
 void Digit5Setup()
 {
-	digit5.segA.dmxChannel = OFFSETDIGIT5 + 1;
-	digit5.segB.dmxChannel = OFFSETDIGIT5 + 2;
-	digit5.segC.dmxChannel = OFFSETDIGIT5 + 7;
-	digit5.segD.dmxChannel = OFFSETDIGIT5 + 6;
-	digit5.segE.dmxChannel = OFFSETDIGIT5 + 5;
-	digit5.segF.dmxChannel = OFFSETDIGIT5 + 4;
+	digit5.segA.dmxChannel = OFFSETDIGIT5 + 5;
+	digit5.segB.dmxChannel = OFFSETDIGIT5 + 4;
+	digit5.segC.dmxChannel = OFFSETDIGIT5 + 6;
+	digit5.segD.dmxChannel = OFFSETDIGIT5 + 7;
+	digit5.segE.dmxChannel = OFFSETDIGIT5 + 1;
+	digit5.segF.dmxChannel = OFFSETDIGIT5 + 2;
 	digit5.segG.dmxChannel = OFFSETDIGIT5 + 3;
 }
 
 void Digit6Setup()
 {
-	digit6.segA.dmxChannel = OFFSETDIGIT6 + 1;
-	digit6.segB.dmxChannel = OFFSETDIGIT6 + 2;
-	digit6.segC.dmxChannel = OFFSETDIGIT6 + 7;
-	digit6.segD.dmxChannel = OFFSETDIGIT6 + 6;
-	digit6.segE.dmxChannel = OFFSETDIGIT6 + 5;
-	digit6.segF.dmxChannel = OFFSETDIGIT6 + 4;
+	digit6.segA.dmxChannel = OFFSETDIGIT6 + 5;
+	digit6.segB.dmxChannel = OFFSETDIGIT6 + 4;
+	digit6.segC.dmxChannel = OFFSETDIGIT6 + 6;
+	digit6.segD.dmxChannel = OFFSETDIGIT6 + 7;
+	digit6.segE.dmxChannel = OFFSETDIGIT6 + 1;
+	digit6.segF.dmxChannel = OFFSETDIGIT6 + 2;
 	digit6.segG.dmxChannel = OFFSETDIGIT6 + 3;
 }
 
@@ -421,19 +421,19 @@ void CalculateSevenSegmentNumbers()
 
 void LightTestNumbers()
 {
-  LightNumber(1, digit1);
-  LightNumber(2, digit2);
+  LightNumber(3, digit1);
+  LightNumber(3, digit2);
   LightNumber(3, digit3);
-  LightNumber(4, digit4);
-  LightNumber(5, digit5);
-  LightNumber(6, digit6);
+  LightNumber(3, digit4);
+  LightNumber(3, digit5);
+  LightNumber(3, digit6);
 }
 
 unsigned long number = 123456;
 unsigned long lastMillis = 0;
 void CountTest()
 {
-	if(millis() - lastMillis > 1000)
+	if(millis() - lastMillis > 10)
 	{
 		lastMillis = millis();
 		number++;
