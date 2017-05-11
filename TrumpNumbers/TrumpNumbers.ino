@@ -22,19 +22,86 @@ struct SevenSeg
 };
 
 // Current Date and Time
-int curHour = 0;
+int curHour = 9;
 int curMinute = 0;
 int curSecond = 0;
-int curDay = 0;
-int curMonth = 0;
-int curYear = 0;
+int curDay = 11;
+int curMonth = 5;
+int curYear = 2017;
 
 // Define Destination Date
-int destinationHour = 0;
-int destinationDay = 0;
-int destinationMonth = 0;
-int destinationYear = 0;
+int destinationHour = 24;
+int destinationDay = 19;
+int destinationMonth = 1;
+int destinationYear = 2021;
 
+int dayDifference = 0;
+int hourDifference = 0;
+
+// DATE CALCULATION
+int days_in_month[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+
+struct date {
+  int day;
+  int month;
+  int year;
+};
+
+int leap_year(int year) {
+    if(year%400==0) return 1;
+
+    if(year%4==0 && year%100!=0) return 1;
+
+    return 0;
+}
+
+int correct(date &d) {
+    if(d.day < 1 || d.day > days_in_month[d.month]) return 0;
+
+    if(d.month < 1 || d.month > 12) return 0;
+
+    return 1;
+}
+
+int number_of_days(date &d) {
+    int result = 0;
+    int i;
+
+    for(i=1; i < d.year; i++) {
+        if(leap_year(i))
+            result += 366;
+        else
+            result += 365;
+    }
+
+    for(i=1; i < d.month; i++) {
+        result += days_in_month[i];
+
+        if(leap_year(d.year) && i == 2) result++;
+    }
+
+    result += d.day;
+    return result;
+}
+
+void GetTimeDifference()
+{
+	date current;
+	current.day = curDay;
+	current.month = curMonth;
+	current.year = curYear;
+
+	date destination;
+	destination.day = destinationDay;
+	destination.month = destinationMonth;
+	destination.year = destinationYear;
+
+	int destDays = number_of_days(destination);
+	int curDays = number_of_days(current);
+
+	hourDifference = abs(destinationHour - curHour);
+	dayDifference = destDays - curDays;
+}
 
 /// GPS TIME GETTING
 #include <Adafruit_GPS.h>
@@ -416,6 +483,14 @@ void LightSevenSegDisplays()
 
 void CalculateSevenSegmentNumbers()
 {
+	GetTimeDifference();
+
+	LightNumber((dayDifference/1000)%10, digit1);
+	LightNumber((dayDifference/100)%10, digit2);
+	LightNumber((dayDifference/10)%10, digit3);
+	LightNumber((dayDifference)%10, digit4);
+	LightNumber((hourDifference/10)%10, digit5);
+	LightNumber((hourDifference)%10, digit6);
 
 }
 
@@ -466,7 +541,9 @@ void loop() {
 	CalculateSevenSegmentNumbers();
 #else
  	//LightTestNumbers();
- 	CountTest();
+ 	//CountTest();
+ 	CalculateSevenSegmentNumbers();
+
 #endif
   
   // Pretty much will be used for brightness
