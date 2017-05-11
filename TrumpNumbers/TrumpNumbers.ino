@@ -522,6 +522,33 @@ void CountTest()
 	LightNumber((number)%10, digit6);
 }
 
+void FakeCount()
+{
+	if(millis() - lastMillis > 250)
+	{
+		lastMillis = millis();
+		
+		curHour++;
+
+		if(curHour > 24)
+		{
+			curHour = 0;
+			curDay++;
+
+			if(curDay > days_in_month[curMonth])
+			{
+				curDay = 1;
+				curMonth++;
+				if(curMonth > 12)
+				{
+					curMonth = 1;
+					curYear++;
+				}
+			}
+		}
+	}
+}
+
 void setup() {
 
 #ifdef USE_GPS
@@ -543,7 +570,7 @@ void loop() {
  	//LightTestNumbers();
  	//CountTest();
  	CalculateSevenSegmentNumbers();
-
+ 	FakeCount();
 #endif
   
   // Pretty much will be used for brightness
