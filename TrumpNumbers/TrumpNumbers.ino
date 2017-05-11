@@ -101,6 +101,12 @@ void GetTimeDifference()
 
 	hourDifference = abs(destinationHour - curHour);
 	dayDifference = destDays - curDays;
+
+	if(dayDifference < 0)
+	{
+		dayDifference = 0;
+		hourDifference = 0;
+	}
 }
 
 /// GPS TIME GETTING
