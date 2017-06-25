@@ -614,6 +614,116 @@ void playEndingAnimation(){
   }
 }
 
+#define DO_FADE
+#define ONOFF_TIME 1000
+#define FADE_TIME 1000
+#define FADE_INTERVAL 20
+#define COLON_CHANNEL 58
+
+unsigned long LastTime = 0;
+unsigned long fadeTime = 0;
+int curColonValue = MIN_VALUE;
+
+// State 0, 2 are on off
+// State 1, 3 are fade
+int fadeState = 0;
+
+void DoColonBlink()
+{
+	if(millis() - LastTime > ONOFF_TIME)
+	{
+		LastTime = millis();
+
+		if(curColonValue == MIN_VALUE)
+		{
+			curColonValue = MAX_VALUE;
+		}
+		else 
+		{
+			curColonValue = MIN_VALUE;
+		}
+	}
+}
+
+void DoColonFade()
+{
+	int divisor = FADE_TIME / FADE_INTERVAL;
+	int fadeValue = (MAX_VALUE - MIN_VALUE) / divisor;
+
+	if(fadeState == 0 || fadeState == 2)
+	{
+		if(fadeState == 0)
+		{
+			curColonValue = MIN_VALUE;
+		}
+		else
+		{
+			curColonValue = MAX_VALUE;
+		}
+
+		if(millis() - LastTime > ONOFF_TIME)
+		{
+			LastTime = millis();
+			fadeTime = millis();
+
+			if(fadeState == 0)
+			{
+				fadeState = 1;
+			}
+			else
+			{
+				fadeState = 3;
+			}
+		}
+	}
+	else if(fadeState == 1 || fadeState == 3)
+	{
+		if(millis() - LastTime > FADE_INTERVAL)
+		{
+			LastTime = millis();
+
+			if(fadeState == 1)
+			{
+				curColonValue = MIN_VALUE + fadeValue;
+			}
+			else
+			{
+				curColonValue = MAX_VALUE - fadeValue;
+			}
+		}
+
+		if(millis() - fadeTime > FADE_TIME)
+		{
+			fadeTime = millis();
+			LastTime = millis();
+
+			if(fadeState == 1)
+			{
+				fadeState = 2;
+			}
+			else
+			{
+				fadeState = 0;
+			}
+		}
+	}
+	else
+	{
+		fadeState = 0;
+	}
+}
+
+void DoColon()
+{
+#ifdef DO_FADE
+	DoColonFade();
+#else
+	DoColonBlink();
+#endif
+
+	DMXSerial.write(COLON_CHANNEL, curColonValue);
+}
+
 void setup() {
 
 #ifdef USE_GPS
@@ -647,6 +757,7 @@ void loop() {
   ReadPotentiometer();
   // Pretty much will be used for brightness
   LightSevenSegDisplays();
+  DoColon();
 
   delayMicroseconds(2000); // wait a little bit
 } // loop
