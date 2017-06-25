@@ -35,6 +35,13 @@ int destinationDay = 19;
 int destinationMonth = 1;
 int destinationYear = 2021;
 
+//
+//// Define FAKE Destination Date
+//int destinationHour = 10;
+//int destinationDay = 12;
+//int destinationMonth = 5;
+//int destinationYear = 2017;
+
 int dayDifference = 0;
 int hourDifference = 0;
 
@@ -102,10 +109,11 @@ void GetTimeDifference()
 	hourDifference = abs(destinationHour - curHour);
 	dayDifference = destDays - curDays;
 
-	if(dayDifference < 0)
+	if(dayDifference == 0 && hourDifference == 0)
 	{
 		dayDifference = 0;
 		hourDifference = 0;
+    playEndingAnimation();
 	}
 }
 
@@ -306,14 +314,27 @@ void LightEight(SevenSeg &mySeg)
 
 void LightNine(SevenSeg &mySeg)
 {
-	mySeg.segA.value = MAX_VALUE;
-	mySeg.segB.value = MAX_VALUE;
-	mySeg.segC.value = MAX_VALUE;
-	mySeg.segD.value = MAX_VALUE;
-	mySeg.segE.value = MIN_VALUE;
-	mySeg.segF.value = MAX_VALUE;
-	mySeg.segG.value = MAX_VALUE;
+  mySeg.segA.value = MAX_VALUE;
+  mySeg.segB.value = MAX_VALUE;
+  mySeg.segC.value = MAX_VALUE;
+  mySeg.segD.value = MAX_VALUE;
+  mySeg.segE.value = MIN_VALUE;
+  mySeg.segF.value = MAX_VALUE;
+  mySeg.segG.value = MAX_VALUE;
 }
+
+
+void LightOff(SevenSeg &mySeg)
+{
+  mySeg.segA.value = MIN_VALUE;
+  mySeg.segB.value = MIN_VALUE;
+  mySeg.segC.value = MIN_VALUE;
+  mySeg.segD.value = MIN_VALUE;
+  mySeg.segE.value = MIN_VALUE;
+  mySeg.segF.value = MIN_VALUE;
+  mySeg.segG.value = MIN_VALUE;
+}
+
 
 void LightNumber(int num, SevenSeg &mySeg)
 {
@@ -353,10 +374,14 @@ void LightNumber(int num, SevenSeg &mySeg)
 	{
 		LightEight(mySeg);
 	}
-	else if(num == 9)
-	{
-		LightNine(mySeg);
-	}
+ else if(num == 9)
+  {
+    LightNine(mySeg);
+  }
+ else if(num == -1)
+  {
+    LightOff(mySeg);
+  }
 }
 
 void LightTwoDigitNumber(int number, SevenSeg &segLeft, SevenSeg &segRight)
@@ -563,6 +588,32 @@ void FakeCount()
 	}
 }
 
+void playEndingAnimation(){
+  while(true){
+    LightNumber(-1, digit1);
+    LightNumber(-1, digit2);
+    LightNumber(-1, digit3);
+    LightNumber(-1, digit4);
+    LightNumber(-1, digit5);
+    LightNumber(-1, digit6);
+    delay(750);
+    ReadPotentiometer();
+    // Pretty much will be used for brightness
+    LightSevenSegDisplays();
+    
+    LightNumber(0, digit1);
+    LightNumber(0, digit2);
+    LightNumber(0, digit3);
+    LightNumber(0, digit4);
+    LightNumber(0, digit5);
+    LightNumber(0, digit6);
+    delay(750);
+    ReadPotentiometer();
+    // Pretty much will be used for brightness
+    LightSevenSegDisplays();
+  }
+}
+
 void setup() {
 
 #ifdef USE_GPS
@@ -582,7 +633,7 @@ void ReadPotentiometer()
 }
 
 void loop() {
-
+  
 #ifdef USE_GPS
 	ReadGPS();
 	CalculateSevenSegmentNumbers();
