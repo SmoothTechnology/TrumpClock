@@ -680,16 +680,17 @@ void DoColonFade()
 	{
 		if(millis() - LastTime > FADE_INTERVAL)
 		{
-			LastTime = millis();
+			LastTime = millis() - ((millis()-LastTime)-FADE_INTERVAL);
 
 			if(fadeState == 1)
 			{
-				curColonValue = MIN_VALUE + fadeValue;
+				curColonValue = curColonValue + fadeValue;
 			}
 			else
 			{
-				curColonValue = MAX_VALUE - fadeValue;
+				curColonValue = curColonValue - fadeValue;
 			}
+
 		}
 
 		if(millis() - fadeTime > FADE_TIME)
@@ -720,6 +721,15 @@ void DoColon()
 #else
 	DoColonBlink();
 #endif
+
+	if(curColonValue > MAX_VALUE)
+	{
+		curColonValue = MAX_VALUE;
+	}
+	else if(curColonValue < MIN_VALUE)
+	{
+		curColonValue = MIN_VALUE;
+	}
 	
 	DMXSerial.write(COLON_CHANNEL, curColonValue);
 }
