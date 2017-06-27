@@ -615,9 +615,9 @@ void playEndingAnimation(){
 }
 
 #define DO_FADE
-#define ONOFF_TIME 1000
-#define FADE_TIME 1000
-#define FADE_INTERVAL 20
+#define ONOFF_TIME 1000 // Peak and Trough hold time for the fade, and blinking
+#define FADE_TIME 1000 // Ramp time for fade
+#define FADE_INTERVAL 20 // Frame Rate for Fade
 #define COLON_CHANNEL 58
 
 unsigned long LastTime = 0;
@@ -720,7 +720,7 @@ void DoColon()
 #else
 	DoColonBlink();
 #endif
-
+	
 	DMXSerial.write(COLON_CHANNEL, curColonValue);
 }
 
