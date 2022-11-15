@@ -30,102 +30,6 @@ struct SevenSeg
 	Segment segG;
 };
 
-// Current Date and Time
-int curHour = 9;
-int curMinute = 0;
-int curSecond = 0;
-int curDay = 11;
-int curMonth = 5;
-int curYear = 2017;
-
-// Define Destination Date
-int destinationHour = 24;
-int destinationDay = 19;
-int destinationMonth = 1;
-int destinationYear = 2021;
-
-//
-//// Define FAKE Destination Date
-//int destinationHour = 10;
-//int destinationDay = 12;
-//int destinationMonth = 5;
-//int destinationYear = 2017;
-
-int dayDifference = 0;
-int hourDifference = 0;
-
-// DATE CALCULATION
-int days_in_month[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
-
-struct date {
-  int day;
-  int month;
-  int year;
-};
-
-int leap_year(int year) {
-    if(year%400==0) return 1;
-
-    if(year%4==0 && year%100!=0) return 1;
-
-    return 0;
-}
-
-int correct(date &d) {
-    if(d.day < 1 || d.day > days_in_month[d.month]) return 0;
-
-    if(d.month < 1 || d.month > 12) return 0;
-
-    return 1;
-}
-
-int number_of_days(date &d) {
-    int result = 0;
-    int i;
-
-    for(i=1; i < d.year; i++) {
-        if(leap_year(i))
-            result += 366;
-        else
-            result += 365;
-    }
-
-    for(i=1; i < d.month; i++) {
-        result += days_in_month[i];
-
-        if(leap_year(d.year) && i == 2) result++;
-    }
-
-    result += d.day;
-    return result;
-}
-
-void GetTimeDifference()
-{
-	date current;
-	current.day = curDay;
-	current.month = curMonth;
-	current.year = curYear;
-
-	date destination;
-	destination.day = destinationDay;
-	destination.month = destinationMonth;
-	destination.year = destinationYear;
-
-	int destDays = number_of_days(destination);
-	int curDays = number_of_days(current);
-
-	hourDifference = abs(destinationHour - curHour);
-	dayDifference = destDays - curDays;
-
-	if(dayDifference == 0 && hourDifference == 0)
-	{
-		dayDifference = 0;
-		hourDifference = 0;
-    playEndingAnimation();
-	}
-}
-
 // BEGIN TRUMP NUMBERS
 void LightZero(SevenSeg &mySeg)
 {
@@ -298,14 +202,6 @@ void LightNumber(int num, SevenSeg &mySeg)
   }
 }
 
-// void LightTwoDigitNumber(int number, SevenSeg &segLeft, SevenSeg &segRight)
-// {
-// 	int TensPlace = (number/10)%10;
-// 	int onesPlace = number%10;
-// 	LightNumber(TensPlace, segLeft);
-// 	LightNumber(onesPlace, segRight);
-// }
-
 
 /*
 	Standard 7 Seg Display Lettering
@@ -436,26 +332,14 @@ void LightSevenSegDisplays()
 	LightSevenSegDigit(digit6);
 }
 
-// void CalculateSevenSegmentNumbers()
-// {
-// 	GetTimeDifference();
-
-// 	LightNumber((dayDifference/1000)%10, digit1);
-// 	LightNumber((dayDifference/100)%10, digit2);
-// 	LightNumber((dayDifference/10)%10, digit3);
-// 	LightNumber((dayDifference)%10, digit4);
-// 	LightNumber((hourDifference/10)%10, digit5);
-// 	LightNumber((hourDifference)%10, digit6);
-// }
-
 void LightTestNumbers()
 {
-  LightNumber(3, digit1);
-  LightNumber(3, digit2);
+  LightNumber(1, digit1);
+  LightNumber(2, digit2);
   LightNumber(3, digit3);
-  LightNumber(3, digit4);
-  LightNumber(3, digit5);
-  LightNumber(3, digit6);
+  LightNumber(4, digit4);
+  LightNumber(5, digit5);
+  LightNumber(6, digit6);
 }
 
 void LightMinuteSecondNumbers()
