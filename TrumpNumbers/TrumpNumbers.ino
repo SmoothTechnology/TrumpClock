@@ -1,8 +1,17 @@
+#define USE_DMX
+
+#ifdef USE_DMX
 #include <DMXSerial.h>
+#endif
+
+#define START_MINUTE 0
+#define START_SECOND 20
+
+int maxSeconds = 0;
+int secondsLeft = 0;
 
 int MAX_VALUE = 255;
 int MIN_VALUE = 0;
-#define USE_GPS
 
 struct Segment
 {
@@ -116,101 +125,6 @@ void GetTimeDifference()
     playEndingAnimation();
 	}
 }
-
-/// GPS TIME GETTING
-#include <Adafruit_GPS.h>
-#include <SoftwareSerial.h>
-
-SoftwareSerial mySerial(8, 7);
-
-Adafruit_GPS GPS(&mySerial);
-
-// Set GPSECHO to 'false' to turn off echoing the GPS data to the Serial console
-// Set to 'true' if you want to debug and listen to the raw GPS sentences. 
-#define GPSECHO  false
-
-// this keeps track of whether we're using the interrupt
-// off by default!
-boolean usingInterrupt = false;
-void useInterrupt(boolean); // Func prototype keeps Arduino 0023 happy
-
-
-void SetupGPS()
-{
-
-  // 9600 NMEA is the default baud rate for Adafruit MTK GPS's- some use 4800
-  GPS.begin(9600);
-  
-  // uncomment this line to turn on RMC (recommended minimum) and GGA (fix data) including altitude
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  
-  // Set the update rate
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz update rate
-
-  // Request updates on antenna status, comment out to keep quiet
-  GPS.sendCommand(PGCMD_ANTENNA);
-
-  useInterrupt(true);
-
-  delay(1000);
-  // Ask for firmware version
-  mySerial.println(PMTK_Q_RELEASE);
-}
-
-SIGNAL(TIMER0_COMPA_vect) {
-  char c = GPS.read();
-#ifdef UDR0
-  if (GPSECHO)
-    if (c) UDR0 = c;  
-#endif
-}
-
-void useInterrupt(boolean v) {
-  if (v) 
-  {
-    OCR0A = 0xAF;
-    TIMSK0 |= _BV(OCIE0A);
-    usingInterrupt = true;
-  } 
-  else 
-  {
-    TIMSK0 &= ~_BV(OCIE0A);
-    usingInterrupt = false;
-  }
-}
-
-uint32_t timer = millis();
-void ReadGPS()
-{
-  if (GPS.newNMEAreceived()) 
-  {
-	  if (!GPS.parse(GPS.lastNMEA())) 
-	      return;  
-  }
-
-  if (timer > millis())  timer = millis();
-
-  if (millis() - timer > 2000) 
-  { 
-    timer = millis();
-    
-    curHour	 	= GPS.hour;
-
-    // Adjust to EST FROM GMT
-    curHour = curHour - 5;
-    if(curHour < 0)
-    {
-    	curHour = 24+curHour;
-    }
-
-    curMinute 	= GPS.minute;
-    curSecond 	= GPS.seconds;
-    curDay 		= GPS.day;
-    curMonth 	= GPS.month;
-    curYear 	= GPS.year + 2000; // Adjust for GPS only returning last 2 digits
-  }
-}
-
 
 // BEGIN TRUMP NUMBERS
 void LightZero(SevenSeg &mySeg)
@@ -384,13 +298,13 @@ void LightNumber(int num, SevenSeg &mySeg)
   }
 }
 
-void LightTwoDigitNumber(int number, SevenSeg &segLeft, SevenSeg &segRight)
-{
-	int TensPlace = (number/10)%10;
-	int onesPlace = number%10;
-	LightNumber(TensPlace, segLeft);
-	LightNumber(onesPlace, segRight);
-}
+// void LightTwoDigitNumber(int number, SevenSeg &segLeft, SevenSeg &segRight)
+// {
+// 	int TensPlace = (number/10)%10;
+// 	int onesPlace = number%10;
+// 	LightNumber(TensPlace, segLeft);
+// 	LightNumber(onesPlace, segRight);
+// }
 
 
 /*
@@ -501,6 +415,7 @@ void SetupSevenSegDigits()
 
 void LightSevenSegDigit(SevenSeg &digit)
 {
+#ifdef USE_DMX
 	DMXSerial.write(digit.segA.dmxChannel, digit.segA.value);
 	DMXSerial.write(digit.segB.dmxChannel, digit.segB.value);
 	DMXSerial.write(digit.segC.dmxChannel, digit.segC.value);
@@ -508,6 +423,7 @@ void LightSevenSegDigit(SevenSeg &digit)
 	DMXSerial.write(digit.segE.dmxChannel, digit.segE.value);
 	DMXSerial.write(digit.segF.dmxChannel, digit.segF.value);
 	DMXSerial.write(digit.segG.dmxChannel, digit.segG.value);
+#endif
 }
 
 void LightSevenSegDisplays()
@@ -520,18 +436,17 @@ void LightSevenSegDisplays()
 	LightSevenSegDigit(digit6);
 }
 
-void CalculateSevenSegmentNumbers()
-{
-	GetTimeDifference();
+// void CalculateSevenSegmentNumbers()
+// {
+// 	GetTimeDifference();
 
-	LightNumber((dayDifference/1000)%10, digit1);
-	LightNumber((dayDifference/100)%10, digit2);
-	LightNumber((dayDifference/10)%10, digit3);
-	LightNumber((dayDifference)%10, digit4);
-	LightNumber((hourDifference/10)%10, digit5);
-	LightNumber((hourDifference)%10, digit6);
-
-}
+// 	LightNumber((dayDifference/1000)%10, digit1);
+// 	LightNumber((dayDifference/100)%10, digit2);
+// 	LightNumber((dayDifference/10)%10, digit3);
+// 	LightNumber((dayDifference)%10, digit4);
+// 	LightNumber((hourDifference/10)%10, digit5);
+// 	LightNumber((hourDifference)%10, digit6);
+// }
 
 void LightTestNumbers()
 {
@@ -543,53 +458,39 @@ void LightTestNumbers()
   LightNumber(3, digit6);
 }
 
-unsigned long number = 123456;
-unsigned long lastMillis = 0;
-void CountTest()
+void LightMinuteSecondNumbers()
 {
-	if(millis() - lastMillis > 10)
-	{
-		lastMillis = millis();
-		number++;
-	}
+	int minutesLeftToDisplay = secondsLeft / 60;
+	int secondsLeftToDisplay = secondsLeft % 60;
 
-	LightNumber((number/100000)%10, digit1);
-	LightNumber((number/10000)%10, digit2);
-	LightNumber((number/1000)%10, digit3);
-	LightNumber((number/100)%10, digit4);
-	LightNumber((number/10)%10, digit5);
-	LightNumber((number)%10, digit6);
-}
+#ifndef USE_DMX
+	Serial.print(minutesLeftToDisplay/10);
+	Serial.print(minutesLeftToDisplay%10);
+	Serial.print(":");
+	Serial.print(secondsLeftToDisplay/10);
+	Serial.println(secondsLeftToDisplay%10);
+#endif
 
-void FakeCount()
-{
-	if(millis() - lastMillis > 250)
-	{
-		lastMillis = millis();
-		
-		curHour++;
+	LightNumber(-1, digit1); // Black out first 2 digits
+	LightNumber(-1, digit2); // Black out first 2 digits
 
-		if(curHour > 24)
-		{
-			curHour = 0;
-			curDay++;
+	// Light Minutes on next 2 digits
+	LightNumber((minutesLeftToDisplay/10)%10, digit3);
+	LightNumber((minutesLeftToDisplay)%10, digit4);
 
-			if(curDay > days_in_month[curMonth])
-			{
-				curDay = 1;
-				curMonth++;
-				if(curMonth > 12)
-				{
-					curMonth = 1;
-					curYear++;
-				}
-			}
-		}
-	}
+	// Light Seconds on final 2 digits
+	LightNumber((secondsLeftToDisplay/10)%10, digit5);
+	LightNumber((secondsLeftToDisplay)%10, digit6);
 }
 
 void playEndingAnimation(){
+	digitalWrite(13, HIGH);
+
   while(true){
+#ifndef USE_DMX
+	Serial.println("00:00");
+#endif
+
     LightNumber(-1, digit1);
     LightNumber(-1, digit2);
     LightNumber(-1, digit3);
@@ -600,7 +501,11 @@ void playEndingAnimation(){
     ReadPotentiometer();
     // Pretty much will be used for brightness
     LightSevenSegDisplays();
-    
+
+#ifndef USE_DMX
+	Serial.println("  :  ");
+#endif
+
     LightNumber(0, digit1);
     LightNumber(0, digit2);
     LightNumber(0, digit3);
@@ -731,17 +636,29 @@ void DoColon()
 		curColonValue = MIN_VALUE;
 	}
 	
+#ifdef USE_DMX
 	DMXSerial.write(COLON_CHANNEL, curColonValue);
+#endif
 }
 
+unsigned long startMillis = 0;
 void setup() {
 
-#ifdef USE_GPS
-	SetupGPS();
+	pinMode(13, OUTPUT);
+
+	maxSeconds = START_MINUTE * 60 + START_SECOND;
+	secondsLeft = maxSeconds;
+
+
+	SetupSevenSegDigits();
+#ifdef USE_DMX
+	DMXSerial.init(DMXController);
+#else
+	Serial.begin(9600);
 #endif
 
-  SetupSevenSegDigits();
-  DMXSerial.init(DMXController);
+	// Seed the counter when starting... Probably could just use millis directly, but this feels more reliable
+	startMillis = millis();
 
 } // setup
 
@@ -753,21 +670,23 @@ void ReadPotentiometer()
 }
 
 void loop() {
-  
-#ifdef USE_GPS
-	ReadGPS();
-	CalculateSevenSegmentNumbers();
-#else
- 	//LightTestNumbers();
- 	//CountTest();
- 	CalculateSevenSegmentNumbers();
- 	FakeCount();
-#endif
-  
-  ReadPotentiometer();
-  // Pretty much will be used for brightness
-  LightSevenSegDisplays();
-  DoColon();
 
-  delayMicroseconds(2000); // wait a little bit
+	unsigned long timeElapsed = millis() - startMillis;
+
+	secondsLeft = maxSeconds - (timeElapsed/1000);
+
+	digitalWrite(13, secondsLeft%2);
+
+	// When we have no more seconds left, blink all zeroes
+	if(secondsLeft == 0){
+		playEndingAnimation();
+	}
+  
+	LightMinuteSecondNumbers();
+	ReadPotentiometer();
+	// Pretty much will be used for brightness
+	LightSevenSegDisplays();
+	DoColon();
+
+	delayMicroseconds(2000); // wait a little bit
 } // loop
