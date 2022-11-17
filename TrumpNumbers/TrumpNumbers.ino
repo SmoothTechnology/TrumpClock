@@ -4,7 +4,7 @@
 #include <DMXSerial.h>
 #endif
 
-#define START_MINUTE 0
+#define START_MINUTE 10
 #define START_SECOND 20
 
 int maxSeconds = 0;
@@ -355,8 +355,8 @@ void LightMinuteSecondNumbers()
 	Serial.println(secondsLeftToDisplay%10);
 #endif
 
-	LightNumber(-1, digit1); // Black out first 2 digits
-	LightNumber(-1, digit2); // Black out first 2 digits
+	LightNumber(0, digit1); // Black out first 2 digits
+	LightNumber(0, digit2); // Black out first 2 digits
 
 	// Light Minutes on next 2 digits
 	LightNumber((minutesLeftToDisplay/10)%10, digit3);
